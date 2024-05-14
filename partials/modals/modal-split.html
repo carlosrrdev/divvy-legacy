@@ -127,16 +127,17 @@
       </div>
     </div>
     <div class="modal-action">
-      <button @click="$store.dv_split.resetAll()" class="btn btn-neutral mr-auto">Reset</button>
+      <button @click="$store.dv_split.resetAll()" class="btn btn-outline btn-accent mr-auto">Reset</button>
       <form @submit.prevent="" class="hidden md:flex flex-col md:flex-row items-center gap-x-2">
         <label :class="(!$store.dv_split.isResultValid() || $store.dv_split.isDivvyComplete)? 'input-disabled': ''"
                class="input input-bordered flex items-center mx-auto">
           <input :disabled="!$store.dv_split.isResultValid() || $store.dv_split.isDivvyComplete" type="text" required
-                 :value="$store.dv_split.divvyName">
+                 :value="$store.dv_split.divvyName" x-ref="dv_name">
         </label>
-        <button @click="$store.dv_split.saveDivvy($event)"
-                x-text="$store.dv_split.saveBtnText"
+        <button @click="$store.dv_split.saveDivvy($refs.dv_name.value)"
                 :disabled="!$store.dv_split.isResultValid() || $store.dv_split.isDivvyComplete" class="btn btn-success">
+          <span :class="$store.dv_split.isLoading? 'loading': ''" class="loading-spinner"></span>
+          <span x-text="$store.dv_split.saveBtnText"></span>
         </button>
       </form>
       <form method="dialog">
@@ -259,10 +260,10 @@
             <label :class="(!$store.dv_split.isResultValid() || $store.dv_split.isDivvyComplete)? 'input-disabled': ''"
                    class="input input-bordered flex items-center w-full mx-auto">
               <input :disabled="!$store.dv_split.isResultValid() || $store.dv_split.isDivvyComplete" type="text"
-                     required
+                     required x-ref="dv_name_mobile"
                      :value="$store.dv_split.divvyName">
             </label>
-            <button @click="$store.dv_split.saveDivvy()"
+            <button @click="$store.dv_split.saveDivvy($refs.dv_name_mobile.value)"
                     :disabled="!$store.dv_split.isResultValid() || $store.dv_split.isDivvyComplete"
                     class="btn w-full btn-success">Save
               results

@@ -34,9 +34,10 @@ export const splitEvenly = {
   alertText: "",
   alertTimeoutId: null,
   alertEl: document.getElementById('split_alert'),
+  isLoading: false,
   isDivvyComplete: false,
   saveBtnText: "Save results",
-  isResultValid: function() {
+  isResultValid: function () {
     return this.members.length >= 2 && this.expenses.length >= 1;
   },
 
@@ -79,7 +80,7 @@ export const splitEvenly = {
     // Validate name to make sure it doesn't start with empty spaces
     if (inputNameEl.value.trim() === '' || inputAmountEl.value.trim() === '') {
       this.showAlert("Enter a valid name and amount", true)
-      inputNameEl.value= '';
+      inputNameEl.value = '';
       inputNameEl.focus();
       inputNameEl.parentElement.classList.add('input-error');
       return null;
@@ -162,15 +163,24 @@ export const splitEvenly = {
   /**
    * Save current state into local storage
    */
-  saveDivvy() {
-    // perform logic to save state
+  async saveDivvy(dvName) {
     const modalResults = document.getElementById('modal_results');
-    this.isDivvyComplete = true;
-    this.saveBtnText = "Saved!";
+    this.isLoading = true;
+    this.saveBtnText = "Saving...";
+    if (dvName.trim() !== '') this.divvyName = dvName;
     this.showAlert(`${this.divvyName} Saved!`, false)
-    if(modalResults.open) {
+    if (modalResults.open) {
       modalResults.close();
     }
+
+    // Pass current divvy state to save store
+    await Alpine.store('dv_save').saveData(
+        {members: this.members, expenses: this.expenses, divvyName: this.divvyName, category: "simple"});
+
+    this.isLoading = false;
+    this.isDivvyComplete = true;
+    this.saveBtnText = "Saved!";
+
   },
 
   /**
@@ -201,9 +211,9 @@ export const splitEvenly = {
    * @return null
    */
   showAlert(message, isError) {
-    if(this.alertTimeoutId) clearTimeout(this.alertTimeoutId);
+    if (this.alertTimeoutId) clearTimeout(this.alertTimeoutId);
 
-    if(isError) {
+    if (isError) {
       this.alertEl.classList.remove('bg-success')
       this.alertEl.classList.add('bg-error');
     } else {
