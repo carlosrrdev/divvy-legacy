@@ -1,6 +1,8 @@
 import {nanoid} from 'nanoid';
 import {format} from 'date-fns';
 import localforage from 'localforage';
+import {db, auth} from "../../app.js";
+import {doc, setDoc} from 'firebase/firestore'
 
 export const saveStore = {
 
@@ -22,6 +24,33 @@ export const saveStore = {
 
       console.log(await localforage.getItem('dv_data'));
 
+
+    } catch(error) {
+      console.error(error)
+    }
+
+    this.testSave(saveDivvyObj.id)
+  },
+
+  async testSave(dvId) {
+    const userId = auth.currentUser.uid;
+
+    try {
+      const divvyRef = doc(db, `users/${userId}/divvies/${dvId}`);
+      await setDoc(divvyRef, {
+        id: dvId,
+        name: "testDivvy",
+        createdAt: format(new Date(), 'PPP'),
+        members: [],
+        expenses: {
+          id: '1',
+          expName: 'test',
+          expAmount: 200,
+          expMemCount: 4
+        },
+        complex: false
+      })
+      console.log('success')
     } catch(error) {
       console.error(error)
     }
