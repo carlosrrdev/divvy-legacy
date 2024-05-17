@@ -1,5 +1,6 @@
 import {nanoid} from 'nanoid';
 import {capitalizeFirstLetter, roundUpToNearest} from "../util.js";
+import {format} from "date-fns";
 
 /**
  * A single member to be used when splitting expenses
@@ -173,9 +174,24 @@ export const splitEvenly = {
       modalResults.close();
     }
 
+    const divvyObj = {
+      id: nanoid(12),
+      name: this.divvyName,
+      createdAt: format(new Date(), 'PPP'),
+      members: this.members.map(member => member.mem_name),
+      expenses: this.expenses.map(expense => {
+        return {
+          id: expense.exp_id,
+          expName: expense.exp_name,
+          expAmount: expense.exp_amount,
+          expMemCount: null,
+        }
+      }),
+      complex: false
+    }
+
     // Pass current divvy state to save store
-    await Alpine.store('dv_save').saveData(
-        {members: this.members, expenses: this.expenses, divvyName: this.divvyName, category: "simple"});
+    await Alpine.store('dv_save').saveData(divvyObj);
 
     this.isLoading = false;
     this.isDivvyComplete = true;
