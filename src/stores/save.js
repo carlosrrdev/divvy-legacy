@@ -1,8 +1,6 @@
-import {nanoid} from 'nanoid';
-import {format} from 'date-fns';
 import localforage from 'localforage';
 import {db, auth} from "../../app.js";
-import {doc, setDoc} from 'firebase/firestore'
+import {doc, setDoc, collection, getDocs} from 'firebase/firestore'
 
 /**
  * Divvy object to be saved in local storage and user's account
@@ -17,6 +15,8 @@ import {doc, setDoc} from 'firebase/firestore'
 
 
 export const saveStore = {
+
+  fbData: [],
 
   /**
    * Save divvy into local storage and attempt to save to users account is they are logged in
@@ -41,16 +41,41 @@ export const saveStore = {
       console.error(error)
     }
 
-    await this.testSave(data)
+    await this.saveToFirestore(data)
   },
 
-  async testSave(data) {
+  async saveToFirestore(data) {
     const userId = auth.currentUser.uid;
 
     try {
       const divvyRef = doc(db, `users/${userId}/divvies/${data.id}`);
       await setDoc(divvyRef, data)
       console.log('success')
+    } catch(error) {
+      console.error(error)
+    }
+  },
+
+  async getFirestoreData() {
+    if(!Alpine.store('dv_fb').isAuthenticated) {
+      this.fbData = []
+      return
+    }
+    const userId = auth.currentUser.uid;
+
+    try {
+      const userCollection = await collection(db, "users", userId, 'divvies');
+      const queryData = await getDocs(userCollection);
+
+      queryData.forEach((doc) => {
+        this.fbData.push({
+          id: doc.id,
+          data: doc.data()
+        });
+      })
+
+      console.log(this.fbData)
+
     } catch(error) {
       console.error(error)
     }

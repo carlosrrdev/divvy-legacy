@@ -14,7 +14,6 @@ export const firebaseStore = {
         this.userEmail = user.email;
         this.userProfileImageUrl = user.photoURL;
         this.isAuthenticated = true;
-        // this.fetchUserData(user.uid);
       } else {
         this.isAuthenticated = false;
         this.userEmail = '';

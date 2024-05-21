@@ -1,11 +1,10 @@
 <header x-data>
   <nav class="dv-container p-6 flex items-center">
-    <button title="Saves" aria-label="Saves" class="btn btn-ghost">
-<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24">
-    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" 
-        stroke-width="2" d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1- 
-        2-2zm4 2h6m-6 4h6m-6 4h4"/>
-</svg>
+    <button @click="$store.dv_save.getFirestoreData()" onclick="modal_saves.showModal()" title="Saves" aria-label="Saves" class="btn btn-ghost">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2zm4 2h6m-6 4h6m-6 4h4"/>
+      </svg>
     </button>
     <a href="/" class="cursor-pointer text-3xl mx-auto dv-font-heading">Divvy</a>
     <div x-show="!$store.dv_fb.isAuthenticated">
@@ -22,16 +21,16 @@
       <div class="dropdown dropdown-bottom dropdown-end">
         <div tabindex="0" role="button" class="btn btn-ghost">
           <div class="avatar">
-            <div class="w-7 md:w-10 rounded-full">
-              <img :src="$store.dv_fb.userProfileImageUrl" alt="profile image" src="" />
+            <div class="w-8 md:w-10 rounded-full">
+              <img :src="$store.dv_fb.userProfileImageUrl" alt="profile image" src=""/>
             </div>
           </div>
         </div>
-        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-lg w-52">
-          <li>
-            <button @click="$store.dv_fb.logout()" class="btn btn-sm btn-ghost">Logout</button>
-          </li>
-        </ul>
+        <div tabindex="0" class="dropdown-content z-[1] menu p-4 shadow bg-base-100 rounded-lg w-52">
+          <p x-text="$store.dv_fb.userEmail" class="text-neutral-500 text-center"></p>
+          <div class="divider"></div>
+          <button @click="$store.dv_fb.logout()" class="btn btn-sm btn-ghost">Logout</button>
+        </div>
       </div>
     </div>
   </nav>

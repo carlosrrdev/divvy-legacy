@@ -1,0 +1,22 @@
+<dialog x-data id="modal_saves" class="modal">
+  <div class="modal-box w-11/12 max-w-7xl min-h-[85%] max-h-[85%]">
+    <h3 class="dv-font-heading text-2xl mb-10">Saved Divvies</h3>
+    <section x-show="$store.dv_fb.isAuthenticated">
+      <ul class="flex flex-col gap-y-2">
+        <template x-for="doc in $store.dv_save.fbData">
+          <li>
+            <button class="btn w-full justify-between">
+              <span x-text="doc.data.name"></span>
+              <span x-text="doc.data.createdAt" class="text-sm text-accent"></span>
+            </button>
+          </li>
+        </template>
+      </ul>
+    </section>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-outline absolute right-5 top-6">✕</button>
+      </form>
+    </div>
+  </div>
+</dialog>
