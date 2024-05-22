@@ -1,0 +1,25 @@
+<dialog x-data id="modal_account" class="modal">
+  <div class="modal-box">
+    <p x-show="!$store.dv_fb.isAuthenticated">Error, please log in to see account settings</p>
+    <template x-if="$store.dv_fb.isAuthenticated">
+      <section class="my-8 flex gap-x-6">
+        <div class="avatar">
+          <div class="w-24 lg:w-32 rounded">
+            <img alt="profile image" :src="$store.dv_fb.userProfileImageUrl" />
+          </div>
+        </div>
+        <div>
+          <h3 class="dv-font-heading lg:text-2xl" x-text="$store.dv_fb.userEmail"></h3>
+          <p class="text-accent text-xs md:text-base">Member since May 5th, 2024</p>
+          <p class="text-accent text-xs md:text-base">Total divvies: 6</p>
+          <button class="btn btn-outline mt-4 btn-sm lg:btn-md btn-error">Delete account</button>
+        </div>
+      </section>
+    </template>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-sm btn-neutral btn-circle absolute right-3 top-3">✕</button>
+      </form>
+    </div>
+  </div>
+</dialog>

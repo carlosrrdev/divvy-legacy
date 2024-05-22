@@ -1,6 +1,7 @@
 <header x-data>
   <nav class="dv-container p-6 flex items-center">
-    <button @click="$store.dv_save.getFirestoreData()" onclick="modal_saves.showModal()" title="Saves" aria-label="Saves" class="btn btn-ghost">
+    <button @click="$store.dv_save.getSavedData()" onclick="modal_saves.showModal()" title="Saves" aria-label="Saves"
+            class="btn btn-ghost">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24">
         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2zm4 2h6m-6 4h6m-6 4h4"/>
@@ -22,14 +23,30 @@
         <div tabindex="0" role="button" class="btn btn-ghost">
           <div class="avatar">
             <div class="w-8 md:w-10 rounded-full">
-              <img :src="$store.dv_fb.userProfileImageUrl" alt="profile image" src=""/>
+              <img :src="$store.dv_fb.userProfileImageUrl" alt="profile image"/>
             </div>
           </div>
         </div>
-        <div tabindex="0" class="dropdown-content z-[1] menu p-4 shadow bg-base-100 rounded-lg w-52">
-          <p x-text="$store.dv_fb.userEmail" class="text-neutral-500 text-center"></p>
-          <div class="divider"></div>
-          <button @click="$store.dv_fb.logout()" class="btn btn-sm btn-ghost">Logout</button>
+        <div tabindex="0" class="dropdown-content z-[1] menu p-4 shadow bg-base-100 rounded-lg w-44">
+          <button onclick="modal_account.showModal()" class="btn btn-sm btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
+              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/>
+                <path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/>
+              </g>
+            </svg>
+            <span class="ml-auto">Account</span>
+          </button>
+          <div class="divider my-1"></div>
+          <button @click="$store.dv_fb.logout()" class="btn btn-sm btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
+              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <path d="M10 8V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2v-2"/>
+                <path d="M15 12H3l3-3m0 6l-3-3"/>
+              </g>
+            </svg>
+            <span class="ml-auto">Logout</span>
+          </button>
         </div>
       </div>
     </div>

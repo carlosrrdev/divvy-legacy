@@ -1,6 +1,6 @@
 import localforage from 'localforage';
 import {db, auth} from "../../app.js";
-import {doc, setDoc, collection, getDocs} from 'firebase/firestore'
+import {doc, query, setDoc, collection, orderBy, getDocs} from 'firebase/firestore'
 
 /**
  * Divvy object to be saved in local storage and user's account
@@ -17,6 +17,7 @@ import {doc, setDoc, collection, getDocs} from 'firebase/firestore'
 export const saveStore = {
 
   fbData: [],
+  isLoading: true,
 
   /**
    * Save divvy into local storage and attempt to save to users account is they are logged in
@@ -37,7 +38,7 @@ export const saveStore = {
       console.log(await localforage.getItem('dv_data'));
 
 
-    } catch(error) {
+    } catch (error) {
       console.error(error)
     }
 
@@ -51,32 +52,36 @@ export const saveStore = {
       const divvyRef = doc(db, `users/${userId}/divvies/${data.id}`);
       await setDoc(divvyRef, data)
       console.log('success')
-    } catch(error) {
+    } catch (error) {
       console.error(error)
     }
   },
 
-  async getFirestoreData() {
-    if(!Alpine.store('dv_fb').isAuthenticated) {
-      this.fbData = []
+  async getSavedData() {
+    if (!Alpine.store('dv_fb').isAuthenticated) {
       return
     }
+
+    this.fbData = []
+    this.isLoading = true;
     const userId = auth.currentUser.uid;
 
     try {
       const userCollection = await collection(db, "users", userId, 'divvies');
-      const queryData = await getDocs(userCollection);
+      const sorted = query(userCollection, orderBy('createdAt', 'desc'))
+      const queryData = await getDocs(sorted);
 
       queryData.forEach((doc) => {
         this.fbData.push({
           id: doc.id,
-          data: doc.data()
+          data: doc.data(),
+          cloud: true
         });
       })
 
-      console.log(this.fbData)
+      this.isLoading = false;
 
-    } catch(error) {
+    } catch (error) {
       console.error(error)
     }
   }
