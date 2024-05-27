@@ -1,5 +1,5 @@
 import {auth, db} from "../../app.js"
-import {signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, reauthenticateWithPopup, signOut} from 'firebase/auth'
+import {signInWithPopup, GoogleAuthProvider, onAuthStateChanged, reauthenticateWithPopup, signOut} from 'firebase/auth'
 import {collection, getDocs} from 'firebase/firestore'
 import {format} from 'date-fns'
 
@@ -30,7 +30,7 @@ export const firebaseStore = {
 
   async login() {
     try {
-      const result = await signInWithRedirect(auth, provider)
+      const result = await signInWithPopup(auth, provider)
       const user = result.user
       await this.setUserState(user)
     } catch (error) {
