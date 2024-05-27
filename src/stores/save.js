@@ -35,7 +35,7 @@ export const saveStore = {
         await localforage.setItem('dv_data', JSON.stringify([data, ...oldLocalData]));
       }
 
-      console.log(await localforage.getItem('dv_data'));
+      // console.log(await localforage.getItem('dv_data'));
 
 
     } catch (error) {
@@ -51,7 +51,6 @@ export const saveStore = {
     try {
       const divvyRef = doc(db, `users/${userId}/divvies/${data.id}`);
       await setDoc(divvyRef, data)
-      console.log('success')
     } catch (error) {
       console.error(error)
     }

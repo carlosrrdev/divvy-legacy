@@ -12,12 +12,12 @@ export default {
         "primary": "#074efd",
         "secondary": "#09101c",
         "accent": "#3e434d",
-        "neutral": "#858a91",
+        "neutral": "#2e3236",
         "base-100": "#f8fbff",
         "info": "#45cbf3",
         "success": "#57c971",
-        "warning": "#e1c170",
-        "error": "#ef4764",
+        "warning": "#de7a06",
+        "error": "#f34160",
       },
       divvyDark: {
         "primary": "#9a96d7",
@@ -28,7 +28,7 @@ export default {
         "info": "#675eec",
         "success": "#34c462",
         "warning": "#dfb65f",
-        "error": "#cb4b62",
+        "error": "#ea4269",
       }
     },],
     darkTheme: "divvyDark"

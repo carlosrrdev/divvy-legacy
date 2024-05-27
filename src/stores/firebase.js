@@ -1,23 +1,29 @@
 import {auth, db} from "../../app.js"
-import {signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut} from 'firebase/auth'
+import {signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, reauthenticateWithPopup, signOut} from 'firebase/auth'
+import {collection, getDocs} from 'firebase/firestore'
+import {format} from 'date-fns'
+
 const provider = new GoogleAuthProvider()
+provider.setCustomParameters({
+  prompt: 'select_account'
+})
 
 export const firebaseStore = {
   isAuthenticated: false,
   userEmail: "",
   userProfileImageUrl: "",
+  userCreatedAtDate: "",
   userData: [],
+  userDivvyCount: null,
+  errorText: "Please log in to view account",
 
   init() {
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, async user => {
       if (user) {
-        this.userEmail = user.email;
-        this.userProfileImageUrl = user.photoURL;
-        this.isAuthenticated = true;
+        await this.setUserState(user)
       } else {
-        this.isAuthenticated = false;
-        this.userEmail = '';
-        this.userData = [];
+        this.resetUserState()
+        this.errorText = "Please log in to view account"
       }
     });
   },
@@ -26,9 +32,7 @@ export const firebaseStore = {
     try {
       const result = await signInWithRedirect(auth, provider)
       const user = result.user
-      this.userEmail = user.email
-      this.userProfileImageUrl = user.photoURL
-      this.isAuthenticated = true
+      await this.setUserState(user)
     } catch (error) {
       console.error(error)
     }
@@ -37,12 +41,46 @@ export const firebaseStore = {
   async logout() {
     try {
       await signOut(auth);
-      this.isAuthenticated = false;
-      this.userEmail = '';
-      this.userProfileImageUrl = '';
-      this.userData = [];
+      this.resetUserState()
+      this.errorText = "Please log in to view account"
     } catch (error) {
       console.error(error)
     }
+  },
+
+  async setUserState(user) {
+    this.userEmail = user.email;
+    this.userProfileImageUrl = user.photoURL;
+    this.userCreatedAtDate = format(user.metadata.creationTime, "PPP");
+    this.isAuthenticated = true;
+    this.userDivvyCount = await this.getDivvyCount(user.uid)
+  },
+
+  resetUserState() {
+    this.isAuthenticated = false;
+    this.userEmail = '';
+    this.userData = [];
+    this.userCreatedAtDate = '';
+    this.userDivvyCount = null;
+  },
+
+  async deleteUserAccount() {
+    try {
+      const user = auth.currentUser;
+      await reauthenticateWithPopup(user, provider)
+      if (user) {
+        await user.delete();
+        this.resetUserState();
+      }
+      this.errorText = "Account successfully deleted"
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async getDivvyCount(uid) {
+    const divviesCollection = collection(db, `users/${uid}/divvies`);
+    const snapshot = await getDocs(divviesCollection);
+    return snapshot.size;
   }
 }

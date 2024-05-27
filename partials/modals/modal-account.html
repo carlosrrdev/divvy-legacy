@@ -1,24 +1,36 @@
 <dialog x-data id="modal_account" class="modal">
-  <div class="modal-box">
-    <p x-show="!$store.dv_fb.isAuthenticated">Error, please log in to see account settings</p>
+  <div x-data="{confirm: false}" class="modal-box w-11/12 max-w-2xl">
+    <p x-text="$store.dv_fb.errorText" x-show="!$store.dv_fb.isAuthenticated"></p>
     <template x-if="$store.dv_fb.isAuthenticated">
-      <section class="my-8 flex gap-x-6">
-        <div class="avatar">
-          <div class="w-24 lg:w-32 rounded">
-            <img alt="profile image" :src="$store.dv_fb.userProfileImageUrl" />
+      <section class="my-8 border-y border-base-200 py-4 flex gap-x-6">
+        <div class="avatar hidden md:inline-flex md:my-auto">
+          <div class="w-24 lg:w-32 h-32 rounded-full">
+            <img alt="profile image" :src="$store.dv_fb.userProfileImageUrl"/>
           </div>
         </div>
         <div>
-          <h3 class="dv-font-heading lg:text-2xl" x-text="$store.dv_fb.userEmail"></h3>
-          <p class="text-accent text-xs md:text-base">Member since May 5th, 2024</p>
-          <p class="text-accent text-xs md:text-base">Total divvies: 6</p>
-          <button class="btn btn-outline mt-4 btn-sm lg:btn-md btn-error">Delete account</button>
+          <h3 class="dv-font-heading text-xl lg:text-2xl" x-text="$store.dv_fb.userEmail"></h3>
+          <p class="text-accent text-xs md:text-base" x-text="`Member since: ${$store.dv_fb.userCreatedAtDate}`"></p>
+          <p x-text="`Divvies: ${$store.dv_fb.userDivvyCount}`" class="text-accent text-xs md:text-base"></p>
+          <button @click="confirm = true" x-show="!confirm" class="btn btn-outline mt-4 btn-sm lg:btn-md">Delete
+            account
+          </button>
+          <div class="join flex my-4">
+            <button @click="confirm = false" x-show="confirm" class="btn btn-sm grow lg:btn-md btn-neutral join-item">
+              Cancel
+            </button>
+            <button @click="$store.dv_fb.deleteUserAccount()" x-show="confirm" class="btn btn-sm lg:btn-md btn-error join-item grow">Confirm delete account
+            </button>
+          </div>
+          <p class="text-xs" x-show="confirm">Deleting your account will remove all your data. <span
+                  class="text-warning">This action cannot be undone.</span>
+          </p>
         </div>
       </section>
     </template>
     <div class="modal-action">
       <form method="dialog">
-        <button class="btn btn-sm btn-neutral btn-circle absolute right-3 top-3">✕</button>
+        <button @click="confirm = false" class="btn btn-sm btn-neutral btn-circle absolute right-3 top-3">✕</button>
       </form>
     </div>
   </div>
