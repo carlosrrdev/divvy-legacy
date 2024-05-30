@@ -21,12 +21,12 @@ export default {
       },
       divvyDark: {
         "primary": "#9a96d7",
-        "secondary": "#938de5",
+        "secondary": "#8a93cb",
         "accent": "#a5a5be",
         "neutral": "#25252d",
         "base-100": "#121219",
-        "info": "#675eec",
-        "success": "#34c462",
+        "info": "#8db3e5",
+        "success": "#68c586",
         "warning": "#dfb65f",
         "error": "#ea4269",
       }

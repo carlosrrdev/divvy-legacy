@@ -28,7 +28,7 @@
                     onclick="modal_members.showModal()" class="btn btn-outline btn-secondary">
               <span>View members</span>
               <span x-text="$store.dv_split.members.length"
-                    :class="$store.dv_split.isDivvyComplete? 'badge-ghost': 'badge-info'" class="badge"></span>
+                    :class="$store.dv_split.isDivvyComplete? 'badge-ghost': 'badge-secondary'" class="badge"></span>
             </button>
           </div>
         </form>
@@ -65,7 +65,7 @@
                     onclick="modal_expenses.showModal()" class="btn btn-outline btn-secondary">
               <span>View expenses</span>
               <span x-text="$store.dv_split.expenses.length"
-                    :class="$store.dv_split.isDivvyComplete? 'badge-ghost': 'badge-info'" class="badge"></span>
+                    :class="$store.dv_split.isDivvyComplete? 'badge-ghost': 'badge-secondary'" class="badge"></span>
             </button>
           </div>
         </form>
