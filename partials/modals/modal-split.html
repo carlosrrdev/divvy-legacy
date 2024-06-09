@@ -25,7 +25,7 @@
               member
             </button>
             <button :disabled="$store.dv_split.isDivvyComplete" @click.prevent
-                    onclick="modal_members.showModal()" class="btn btn-outline btn-secondary">
+                    onclick="modal_members.showModal()" class="btn">
               <span>View members</span>
               <span x-text="$store.dv_split.members.length"
                     :class="$store.dv_split.isDivvyComplete? 'badge-ghost': 'badge-secondary'" class="badge"></span>
@@ -62,7 +62,7 @@
               expense
             </button>
             <button :disabled="$store.dv_split.isDivvyComplete" @click.prevent
-                    onclick="modal_expenses.showModal()" class="btn btn-outline btn-secondary">
+                    onclick="modal_expenses.showModal()" class="btn">
               <span>View expenses</span>
               <span x-text="$store.dv_split.expenses.length"
                     :class="$store.dv_split.isDivvyComplete? 'badge-ghost': 'badge-secondary'" class="badge"></span>

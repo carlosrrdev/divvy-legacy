@@ -16,7 +16,7 @@ export default {
         "base-100": "#f8fbff",
         "info": "#45cbf3",
         "success": "#57c971",
-        "warning": "#de7a06",
+        "warning": "#ffd66d",
         "error": "#f34160",
       },
       divvyDark: {

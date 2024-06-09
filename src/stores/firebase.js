@@ -82,5 +82,5 @@ export const firebaseStore = {
     const divviesCollection = collection(db, `users/${uid}/divvies`);
     const snapshot = await getDocs(divviesCollection);
     return snapshot.size;
-  }
+  },
 }

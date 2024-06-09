@@ -6,23 +6,31 @@
         <button class="btn btn-sm btn-outline btn-accent join-item">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4m-4 4a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/>
-          </svg>
-          <span class="hidden md:inline">Reload</span>
-        </button>
-        <button class="btn btn-sm btn-outline btn-accent join-item">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M7 3v18m3-15L7 3L4 6m16 12l-3 3l-3-3m3 3V3"/>
           </svg>
           <span class="hidden md:inline">Sort</span>
         </button>
-        <button class="btn btn-sm btn-outline btn-accent join-item">
+        <div :class="{'md:tooltip md:tooltip-warning': $store.dv_save.needsSync}"
+             data-tip="You have local data that hasn't been synced">
+          <button :disabled="!$store.dv_fb.isAuthenticated" :class="{
+          'btn-disabled': !$store.dv_fb.isAuthenticated,
+          'btn-warning': $store.dv_save.needsSync
+          }"
+                  class="btn btn-sm btn-outline join-item">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 18a3.5 3.5 0 0 0 0-7h-1A5 4.5 0 0 0 7 9a4.6 4.4 0 0 0-2.1 8.4M12 13v9m-3-3l3 3l3-3"/>
+            </svg>
+            <span class="hidden md:inline">Sync data</span>
+          </button>
+        </div>
+        <button :disabled="!$store.dv_fb.isAuthenticated" :class="$store.dv_fb.isAuthenticated? '': 'btn-disabled'"
+                class="btn btn-sm btn-outline btn-accent join-item">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M19 18a3.5 3.5 0 0 0 0-7h-1A5 4.5 0 0 0 7 9a4.6 4.4 0 0 0-2.1 8.4M12 13v9m-3-3l3 3l3-3"/>
+                  d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4m-4 4a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/>
           </svg>
-          <span class="hidden md:inline">Sync data</span>
+          <span class="hidden md:inline">Reload</span>
         </button>
       </div>
       <button class="btn btn-sm btn-outline btn-error">Delete all</button>
@@ -32,12 +40,12 @@
              x-show="$store.dv_save.isLoading">
       <span class="loading loading-spinner loading-lg"></span>
     </section>
-    <section x-show="$store.dv_fb.isAuthenticated && !($store.dv_save.isLoading)">
+    <section x-show="!$store.dv_save.isLoading">
       <ul class="flex flex-col gap-y-2">
-        <template x-for="doc in $store.dv_save.fbData">
+        <template x-for="doc in $store.dv_save.storedData">
           <li>
-            <button class="btn w-full justify-between">
-              <span x-text="doc.data.name" class="text-xs md:text-base"></span>
+            <button class="btn w-full items-center justify-between">
+              <span x-text="doc.name" class="text-xs md:text-base"></span>
               <span class="flex text-accent items-center gap-x-4">
                 <span x-show="doc.cloud">
                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
@@ -49,7 +57,16 @@
                         d="M11 18.004H6.657C4.085 18 2 15.993 2 13.517c0-2.475 2.085-4.482 4.657-4.482c.393-1.762 1.794-3.2 3.675-3.773c1.88-.572 3.956-.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.388 0 2.585.82 3.138 2.007M15 19l2 2l4-4"/>
                    </svg>
                 </span>
-                <span x-text="doc.data.createdAt" class="text-xs"></span>
+                <span x-show="doc.local">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 16H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v8m-6 6l2 2l4-4M7 20h4m-2-4v4"/></svg>
+                </span>
+                <span x-text="doc.createdAt" class="text-xs"></span>
               </span>
             </button>
           </li>
