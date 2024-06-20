@@ -14,9 +14,9 @@ export default {
         "accent": "#3e434d",
         "neutral": "#2e3236",
         "base-100": "#f8fbff",
-        "info": "#45cbf3",
+        "info": "#8bccff",
         "success": "#57c971",
-        "warning": "#ffd66d",
+        "warning": "#ff8800",
         "error": "#f34160",
       },
       divvyDark: {

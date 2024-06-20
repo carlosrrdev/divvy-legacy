@@ -1,6 +1,6 @@
 import {nanoid} from 'nanoid';
 import {capitalizeFirstLetter, roundUpToNearest} from "../util.js";
-import {format} from "date-fns";
+import {Timestamp} from 'firebase/firestore'
 
 /**
  * A single member to be used when splitting expenses
@@ -177,7 +177,7 @@ export const splitEvenly = {
     const divvyObj = {
       id: nanoid(12),
       name: this.divvyName,
-      createdAt: format(new Date(), 'PPP'),
+      createdAt: Timestamp.now().toDate().toISOString(),
       members: this.members.map(member => member.mem_name),
       expenses: this.expenses.map(expense => {
         return {

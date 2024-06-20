@@ -1,25 +1,50 @@
 import localforage from 'localforage';
 import {db, auth} from "../../app.js";
-import {doc, query, setDoc, collection, orderBy, getDocs} from 'firebase/firestore'
-import {compareArrays, sortDatesByNewestFirst} from "../util.js";
+import {doc, setDoc, collection, getDocs, deleteDoc, Timestamp} from 'firebase/firestore'
+import {format} from 'date-fns'
+import {sortDivviesByDate} from "../util.js";
 
 /**
  * @type {import("/types.js").Divvy} Divvy
+ * @type {import("/types.js").SaveStore} SaveStore
  */
 
+/** @type SaveStore */
 export const saveStore = {
 
   storedData: [],
+  inFirebaseOnly: [],
+  inLocalOnly: [],
   isLoading: true,
+  isDeleting: false,
+  isSyncing: false,
   needsSync: false,
+  newestFirst: true,
+
 
   /**
-   * Save divvy into local storage and attempt to save to users account is they are logged in
-   * @param {Divvy} data
-   * @return {Promise<void>}
+   * Saves the data to local storage and Firestore if the user is authenticated.
+   * @param {Divvy} data - The data to be saved.
+   * @return {Promise<void>} - A promise that resolves when the data is saved.
    */
-  saveData: async function (data) {
+  async saveData(data) {
+    try {
+      await this.saveToLocal(data)
 
+      if (Alpine.store("dv_fb").isAuthenticated) {
+        await this.saveToFirestore(data)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
+  /**
+   * Saves data locally to the browsers local storage.
+   * @param {Divvy} data - The data to be saved.
+   * @return {Promise<void>} - A promise that resolves when the data is successfully saved.
+   */
+  async saveToLocal(data) {
     try {
       const oldLocalData = JSON.parse(await localforage.getItem('dv_data'));
 
@@ -28,18 +53,16 @@ export const saveStore = {
       } else {
         await localforage.setItem('dv_data', JSON.stringify([data, ...oldLocalData]));
       }
-
-      // console.log(await localforage.getItem('dv_data'));
-
-
     } catch (error) {
       console.error(error)
     }
-    if (Alpine.store("dv_fb").isAuthenticated) {
-      await this.saveToFirestore(data)
-    }
   },
 
+  /**
+   * Saves data to Firestore.
+   * @param {Divvy} data - The data to save to Firestore.
+   * @return {Promise<void>} - A Promise that resolves when the data is successfully saved to Firestore.
+   */
   async saveToFirestore(data) {
     const userId = auth.currentUser.uid;
 
@@ -51,6 +74,10 @@ export const saveStore = {
     }
   },
 
+  /**
+   * Retrieves saved data from Firestore and local storage.
+   * @return {Promise<void>} - A promise that resolves when the data retrieval is complete.
+   */
   async getSavedData() {
     if (Alpine.store('dv_fb').isAuthenticated) {
       this.storedData = []
@@ -71,29 +98,28 @@ export const saveStore = {
 
         //TODO Might be an error when trying to load divvies on a fresh account
         if (!localData || localData.length < 1) {
-          firestoreData.forEach(doc => {
-            this.storedData.push({...doc, cloud: true, local: false})
+          const sortedArr = sortDivviesByDate(firestoreData)
+          sortedArr.forEach(doc => {
+            const timestamp = Timestamp.fromDate(new Date(doc.createdAt)).toDate()
+            const formattedDate = format(timestamp, "Pp")
+            this.storedData.push({...doc, cloud: true, local: false, fDate: formattedDate})
           })
         } else {
-          // check to see which divvies are in both firestore and local
           const inBoth = firestoreData.filter(obj1 => localData.find(obj2 => obj1.id === obj2.id))
-          const inFirestoreOnly = firestoreData.filter(obj1 => !localData.find(obj2 => obj1.id === obj2.id))
-          const inLocalOnly = localData.filter(obj1 => !firestoreData.find(obj2 => obj1.id === obj2.id))
+          this.inFirebaseOnly = firestoreData.filter(obj1 => !localData.find(obj2 => obj1.id === obj2.id))
+          this.inLocalOnly = localData.filter(obj1 => !firestoreData.find(obj2 => obj1.id === obj2.id))
 
-          if(inFirestoreOnly.length > 0 || inLocalOnly.length > 0) {
+          if (this.inFirebaseOnly.length > 0 || this.inLocalOnly.length > 0) {
             this.needsSync = true;
           }
 
-          const tempArr1 = inBoth.map(item => {
-            return {...item, cloud: true, local: true}
-          })
-          const tempArr2 = inFirestoreOnly.map((item) => {
-            return {...item, cloud: true, local: false}
-          })
-          const tempArr3 = inLocalOnly.map((item) => {
-            return {...item, cloud: false, local: true}
-          })
-          this.storedData = [...tempArr1, ...tempArr2, ...tempArr3]
+          const _arr1 = inBoth.map(item => this.appendDivvyObj(item, true, true))
+          const _arr2 = this.inFirebaseOnly.map(item => this.appendDivvyObj(item, true, false))
+          const _arr3 = this.inLocalOnly.map(item => this.appendDivvyObj(item, false, true))
+
+          this.storedData = sortDivviesByDate(
+              [..._arr1, ..._arr2, ..._arr3],
+              this.newestFirst ? 'desc' : 'asc');
         }
 
         this.isLoading = false;
@@ -110,9 +136,97 @@ export const saveStore = {
         return;
       }
       localData.forEach(doc => {
-        this.storedData.push({...doc, cloud: false, local: true})
+        const timestamp = Timestamp.fromDate(new Date(doc.createdAt)).toDate()
+        const formattedDate = format(timestamp, "Pp")
+        this.storedData.push({...doc, cloud: false, local: true, fDate: formattedDate})
       })
       this.isLoading = false;
     }
+  },
+
+  /**
+   * Synchronizes data between local storage and Firebase.
+   * @return {Promise<void>} A promise that resolves once the synchronization is complete.
+   */
+  async syncData() {
+    this.isSyncing = true
+    this.needsSync = false
+
+    try {
+      if (this.inFirebaseOnly.length > 0) {
+        for (const doc1 of this.inFirebaseOnly) {
+          await this.saveToLocal(doc1)
+        }
+      }
+
+      if (this.inLocalOnly.length > 0) {
+        for (const doc1 of this.inLocalOnly) {
+          await this.saveToFirestore(doc1)
+        }
+      }
+
+      this.isSyncing = false;
+
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
+  /**
+   * Deletes all saved data including data stored on users account if they are logged in.
+   * @return {Promise<void>} A promise that resolves when the operation is complete.
+   */
+  async deleteAllSavedData() {
+    try {
+      this.isLoading = true
+      await localforage.removeItem('dv_data');
+
+      if (Alpine.store('dv_fb').isAuthenticated) {
+        const userId = auth.currentUser.uid;
+        const userCollection = await collection(db, "users", userId, 'divvies');
+        const queryData = await getDocs(userCollection);
+        for (const doc of queryData.docs) {
+          await deleteDoc(doc.ref);
+        }
+      }
+
+      this.storedData = []
+      this.inFirebaseOnly = []
+      this.inLocalOnly = []
+      this.isDeleting = false;
+
+      this.isLoading = false;
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
+  /**
+   * Appends additional information to the Divvy object
+   * @param {Divvy} divvy
+   * @param {boolean} cloud
+   * @param {boolean} local
+   * @return {Divvy}
+   */
+  appendDivvyObj(divvy, cloud, local) {
+    const timestamp = Timestamp.fromDate(new Date(divvy.createdAt)).toDate()
+    const formattedDate = format(timestamp, "Pp")
+    return {...divvy, cloud, local, fDate: formattedDate}
+  },
+
+  changeSortingOrder() {
+    this.newestFirst = !this.newestFirst;
+    sortDivviesByDate(this.storedData, this.newestFirst ? 'desc' : 'asc')
+  },
+
+  /**
+   * The modal prompting the user to confirm if they want to delete all saved data. Add or removes it from the
+   * HTML document.
+   */
+  showConfirmDeleteModal() {
+    this.isDeleting = true;
+    setTimeout(() => {
+      document.getElementById("modal_confirm_delete").showModal()
+    }, 0)
   }
 }

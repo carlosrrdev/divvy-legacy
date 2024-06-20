@@ -25,28 +25,20 @@ export function roundUpToNearest(num) {
 }
 
 /**
- * Sorts the data by dates, newest first
- * @param {Array<import("/types.js").StoredDivvy>} data
- * @return {Array<import("/types.js").StoredDivvy>}
+ * Sorts the given array of Divvies by createdAt date
+ * @param {Array<Divvy>} divvies
+ * @param {("desc"|"asc")} order
+ * @return {Array<Divvy>}
  */
-export function sortDatesByNewestFirst(data) {
-  // go through each object in the data array and compare createdAt dates, push into sortedArray based on newest first
-  return data.sort((a, b) => compareAsc(a.createdAt, b.createdAt));
-}
+export function sortDivviesByDate(divvies, order = 'desc') {
+  return divvies.sort((a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
 
-/**
- * Compares two arrays and checks if they are equal.
- *
- * @param {Array<Divvy>} arr1 - The first array to compare.
- * @param {Array<Divvy>} arr2 - The second array to compare.
- * @return {boolean} - Returns true if the arrays are equal, false otherwise.
- */
-export function compareArrays(arr1, arr2) {
-  if (arr1.length !== arr2.length) return false;
-
-  for (let i = 0; i < arr1.length; i++) {
-    console.log(`Arr1: ${arr1[i].id}, Arr2: ${arr2[i].id}`);
-    if (arr1[i].id !== arr2[i].id) return false;
-  }
-  return true;
+    if (order === 'asc') {
+      return dateA - dateB;
+    } else {
+      return dateB - dateA;
+    }
+  });
 }
