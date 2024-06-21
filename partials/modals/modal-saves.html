@@ -47,7 +47,7 @@
       <ul class="flex flex-col gap-y-2">
         <template x-for="doc in $store.dv_save.storedData">
           <li>
-            <button class="btn w-full items-center justify-between">
+            <button @click="$store.dv_vd.showDivvyModal(doc)" class="btn h-auto w-full py-2 items-center justify-between">
               <span class="flex flex-col items-start">
                 <span x-text="doc.name" class="text-xs text-accent md:text-base"></span>
                 <span x-text="doc.fDate" class="text-xs opacity-[0.65]"></span>

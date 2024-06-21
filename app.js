@@ -2,9 +2,10 @@ import "./style.css";
 import Alpine from 'alpinejs';
 import "htmx.org";
 import localforage from "localforage";
-import {splitEvenly} from "./src/stores/split_evenly.js";
+import {splitEvenlyStore} from "./src/stores/split_evenly.js";
 import {saveStore} from "./src/stores/save.js";
 import {firebaseStore} from "./src/stores/firebase.js";
+import {viewDivvyStore} from "./src/stores/view_divvy.js";
 import {initializeApp} from 'firebase/app';
 import {getAnalytics} from "firebase/analytics"
 import {getAuth} from "firebase/auth";
@@ -33,9 +34,10 @@ localforage.config({
   description: "Local db for Divvy"
 })
 
-Alpine.store('dv_split', splitEvenly)
+Alpine.store('dv_split', splitEvenlyStore)
 Alpine.store('dv_fb', firebaseStore)
 Alpine.store('dv_save', saveStore)
+Alpine.store('dv_vd', viewDivvyStore)
 
 
 Alpine.start();

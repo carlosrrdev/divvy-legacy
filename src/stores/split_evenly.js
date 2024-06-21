@@ -17,7 +17,7 @@ import {Timestamp} from 'firebase/firestore'
  * @property {number} exp_amount
  */
 
-export const splitEvenly = {
+export const splitEvenlyStore = {
   /**
    * An array of objects containing member id's and name
    * @type {Array<Member>}

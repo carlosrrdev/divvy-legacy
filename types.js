@@ -23,8 +23,7 @@
 
 /**
  * Controls the data flow between Firebase, Firestore, and localStorage.
- *
- * @typedef {Object} SaveStore - Controls the data flow between Firebase, Firestore, and localStorage
+ * @typedef {Object} SaveStore
  * @property {Array} storedData - The primary array that contains all data
  * @property {Array} inFirebaseOnly - An array containing only Divvies stored in Firebase
  * @property {Array} inLocalOnly - An Array containing only Divvies stored in localStorage
@@ -41,4 +40,12 @@
  *    Will also check to see which Divvies are not in sync between the two.
  * @property {function(): Promise<void>} syncData - Syncs data between Firebase and localStorage
  * @property {function(): Promise<void>} deleteAllSavedData - Deletes all saved data on Firebase and localStorage
+ */
+
+/**
+ * Controls the modal that shows the saved results of a Divvy
+ * @typedef {Object} ViewDivvyStore
+ * @property {boolean} isModalVisible - Determines if modal is currently visible or hidden
+ * @property {Divvy} loadedData - The currently loaded Divvy data passed in from SaveStore
+ * @property {function(Divvy): void} showDivvyModal - The modal parent that shows selected Divvy results
  */
