@@ -4,44 +4,48 @@
       <div class="text-center mb-6">
         <h3 x-text="$store.dv_vd.loadedData.name"
             class="text-3xl md:text-3xl lg:text-4xl dv-font-heading"></h3>
-        <p x-text="`Created on ${$store.dv_vd.loadedData.fDate}`" class="text-sm md:text-base text-neutral-500"></p>
+        <p x-text="$store.dv_vd.loadedData.fDate" class="text-sm md:text-base text-neutral-400"></p>
       </div>
       <div class="flex flex-col gap-y-4 md:grid md:grid-cols-2 md:gap-x-4">
-        <div class="bg-base-300 p-4 rounded-md border border-neutral-800">
-          <h4 class="text-xl dv-font-heading text-secondary">Expenses</h4>
+        <div class="dv-view-cell">
+          <h4 class="text-xl mb-4 dv-font-heading text-secondary">Expenses</h4>
           <ul class="flex flex-col gap-y-1">
             <template x-for="exp in $store.dv_vd.loadedData.expenses">
-              <li class="flex py-1 justify-between border-b border-neutral-800 last-of-type:border-none">
+              <li class="flex py-1 justify-between border-b border-base-200 dark:border-neutral-800 last-of-type:border-none">
                 <span x-text="exp.expName"></span>
                 <span x-text="`$${exp.expAmount}`"></span>
               </li>
             </template>
           </ul>
-          <p class="text-right text-secondary mt-2" x-text="`Total: $${$store.dv_vd.calcExpTotal()}`"></p>
+          <p class="text-right text-neutral mt-2" x-text="`Total: $${$store.dv_vd.calcExpTotal()}`"></p>
         </div>
-        <div class="bg-base-300 p-4 rounded-md border border-neutral-800">
-          <h4 class="text-xl dv-font-heading text-secondary">Members</h4>
+        <div class="dv-view-cell">
+          <h4 class="text-xl mb-4 dv-font-heading text-secondary">Members</h4>
           <ul class="flex flex-col gap-y-1">
             <template x-for="mem in $store.dv_vd.loadedData.members">
-              <li class="py-1 border-b border-neutral-800 last-of-type:border-none">
+              <li class="py-1 border-b border-base-200 dark:border-neutral-800 last-of-type:border-none">
                 <span x-text="mem"></span>
               </li>
             </template>
           </ul>
         </div>
       </div>
-      <div class="bg-base-300 mt-4 p-4 rounded-md border border-neutral-800">
+      <div class="dv-view-cell bg-info mt-4">
         <template x-if="$store.dv_vd.loadedData.complex">
           <p>build later for complex</p>
         </template>
         <template x-if="!$store.dv_vd.loadedData.complex">
           <p class="dv-font-heading text-xl">
             Split evenly:
-            <span class="text-success" x-text="`$${$store.dv_vd.calcSplitTotal()}`"></span>
+            <span x-text="`$${$store.dv_vd.calcSplitTotal()}`"></span>
           </p>
         </template>
       </div>
-      <div class="modal-action">
+      <div class="modal-action justify-between">
+        <div>
+          <button @click="$store.dv_vd.showConfirmDelete = true" x-show="!$store.dv_vd.showConfirmDelete" class="btn btn-outline">Delete</button>
+          <button x-show="$store.dv_vd.showConfirmDelete" class="btn btn-error">Confirm delete</button>
+        </div>
         <form method="dialog">
           <button @click.prevent="$store.dv_vd.hideDivvyModal()" class="btn btn-outline btn-accent">Close</button>
         </form>

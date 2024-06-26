@@ -79,6 +79,10 @@ body::after {
         @apply p-8 min-w-44 flex flex-col items-center rounded-xl border-2 border-secondary transition
         duration-150 md:hover:bg-secondary active:scale-95 md:hover:text-base-100
     }
+
+    .dv-view-cell {
+        @apply bg-white dark:bg-base-300 p-4 rounded-md border border-base-200 dark:border-neutral-800
+    }
 }
 
 :root:has(:is(.modal-open,.modal-target,.modal-toggle:checked+.modal,.modal[open])) {

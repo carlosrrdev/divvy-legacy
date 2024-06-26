@@ -11,10 +11,12 @@ import {roundUpToNearest} from "../util.js";
  */
 export const viewDivvyStore = {
   isModalVisible: false,
+  showConfirmDelete: false,
   loadedData: {},
 
   showDivvyModal(data) {
     this.isModalVisible = true;
+    this.showConfirmDelete = false;
     this.loadedData = data;
 
     setTimeout(() => {
