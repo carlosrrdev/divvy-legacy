@@ -75,14 +75,14 @@
         <button onclick="modal_results.showModal()" class="btn btn-secondary w-full md:hidden">View Split Results
         </button>
       </div>
-      <div class="hidden md:block">
-        <h3 class="dv-font-heading text-2xl mb-4">Results</h3>
-        <small x-show="!$store.dv_split.isResultValid()">
+      <div class="hidden md:flex md:flex-col">
+<!--        <h3 class="dv-font-heading text-2xl mb-4">Results</h3>-->
+        <small class="inline-block m-auto" x-show="!$store.dv_split.isResultValid()">
           Please add at least two
-          members and one expense to view your results!
+          members and one expense to view your results
         </small>
         <div class="flex flex-col" x-show="$store.dv_split.isResultValid()">
-          <div class="my-4">
+          <div>
             <h4 class="text-4xl dv-font-heading flex items-center gap-x-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24">
                 <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -92,7 +92,7 @@
               </svg>
               <span x-text="`$${$store.dv_split.calcSplitTotal()}`"></span>
             </h4>
-            <p>Evenly split between everyone!</p>
+            <p>Evenly split between everyone</p>
           </div>
           <div class="collapse rounded-md collapse-arrow border border-base-300 dark:border-gray-600 bg-base-100">
             <input aria-hidden="true" type="checkbox"/>
@@ -210,7 +210,7 @@
         <h3 class="dv-font-heading text-2xl mb-4">Results</h3>
         <small x-show="!$store.dv_split.isResultValid()">
           Please add at least two
-          members and one expense to view your results!
+          members and one expense to view your results
         </small>
         <div class="flex flex-col" x-show="$store.dv_split.isResultValid()">
           <div class="my-4">
@@ -223,7 +223,7 @@
               </svg>
               <span x-text="`$${$store.dv_split.calcSplitTotal()}`"></span>
             </h4>
-            <p>Evenly split between everyone!</p>
+            <p>Evenly split between everyone</p>
           </div>
           <div class="collapse rounded-md collapse-arrow border border-base-300 dark:border-gray-600 bg-base-100">
             <input aria-hidden="true" type="checkbox"/>

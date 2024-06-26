@@ -16,7 +16,7 @@
             account
           </button>
           <div class="join flex my-4">
-            <button @click="confirm = false" x-show="confirm" class="btn btn-sm grow lg:btn-md btn-neutral join-item">
+            <button @click="confirm = false" x-show="confirm" class="btn btn-accent btn-sm grow lg:btn-md join-item">
               Cancel
             </button>
             <button @click="$store.dv_fb.deleteUserAccount()" x-show="confirm" class="btn btn-sm lg:btn-md btn-error join-item grow">Confirm delete account

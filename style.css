@@ -2,66 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-
-body {
-    background-image: url("/pattern.svg");
-    background-repeat: repeat;
-    background-size: 8px;
-    background-position: center;
-    background-color: white;
-}
-
-
-footer {
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 1) 120%);
-}
-
-body::after {
-    content: "";
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 5;
-    top: 0;
-    left: 0;
-    background-image: radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.9) 50px, transparent 95%),
-    radial-gradient(at 100% 0%, rgba(255, 255, 255, 0.9) 50px, transparent 95%),
-    radial-gradient(at 0% 20%, rgba(163, 164, 238, 0.5) 180px, transparent 95%),
-    radial-gradient(at 100% 20%, rgba(151, 205, 239, 0.3) 180px, transparent 95%),
-    radial-gradient(at 50% 100%, rgba(216, 212, 246, 0.9) 180px, transparent 95%);
-    background-position: 50% 50%;
-    background-size: cover;
-}
-
-@media screen and (prefers-color-scheme: dark) {
-    body {
-        background-color: black;
-        background-image: url("/pattern-light.svg");
-    }
-
-    body::after {
-        background-image: radial-gradient(at 0% 0%, rgba(7, 7, 14, 0.9) 50px, transparent 95%),
-        radial-gradient(at 100% 0%, rgba(7, 7, 14, 0.9) 50px, transparent 95%),
-        radial-gradient(at 0% 100%, rgba(25, 32, 49, 0.3) 180px, transparent 95%),
-        radial-gradient(at 100% 100%, rgba(31, 38, 49, 0.3) 180px, transparent 95%),
-        radial-gradient(at 50% 100%, rgba(37, 25, 49, 0.9) 180px, transparent 95%);
-    }
-
-    footer {
-        background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 1) 120%);
-    }
-}
-
 @layer components {
     .dv-font-body {
-        font-family: "DM Sans", -apple-system, system-ui, sans-serif;
+        font-family: "Lato", -apple-system, system-ui, sans-serif;
         font-optical-sizing: auto;
         font-weight: 400;
         font-style: normal;
     }
 
     .dv-font-heading {
-        font-family: "DM Serif Display", serif;
+        font-family: "Cantata One", serif;
         font-weight: 400;
         font-style: normal;
     }
@@ -81,7 +31,7 @@ body::after {
     }
 
     .dv-view-cell {
-        @apply bg-white dark:bg-base-300 p-4 rounded-md border border-base-200 dark:border-neutral-800
+        @apply p-4 rounded-md border border-base-200 dark:border-neutral-800
     }
 }
 

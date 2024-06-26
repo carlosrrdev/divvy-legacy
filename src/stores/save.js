@@ -166,6 +166,7 @@ export const saveStore = {
       }
 
       this.isSyncing = false;
+      await this.getSavedData()
 
     } catch (error) {
       console.error(error)
@@ -198,6 +199,35 @@ export const saveStore = {
       this.isLoading = false;
     } catch (error) {
       console.error(error)
+    }
+  },
+
+  async deleteSingleDivvy(id) {
+    if (Alpine.store('dv_fb').isAuthenticated) {
+      try {
+        const userId = auth.currentUser.uid;
+        const userCollection = await collection(db, "users", userId, 'divvies');
+
+        const docExists = await getDocs(userCollection).then((querySnapshot) => {
+          return querySnapshot.docs.some((doc) => doc.id === id);
+        });
+
+        if(docExists) {
+          const divvyDoc = doc(userCollection, id);
+          await deleteDoc(divvyDoc);
+        }
+      } catch(error) {
+        console.error(error)
+      }
+    }
+
+    /** @type {Array<Divvy>} */
+    const oldLocalData = JSON.parse(await localforage.getItem('dv_data'));
+
+    const index = oldLocalData.findIndex(obj => obj.id === id);
+    if (index !== -1) {
+      oldLocalData.splice(index, 1);
+      await localforage.setItem('dv_data', JSON.stringify(oldLocalData));
     }
   },
 

@@ -37,6 +37,16 @@ export const viewDivvyStore = {
     return roundUpToNearest(splitTotal);
   },
 
+  async deleteDivvy(id) {
+    try {
+      await Alpine.store("dv_save").deleteSingleDivvy(id)
+      this.hideDivvyModal()
+      await Alpine.store("dv_save").getSavedData()
+    } catch(error) {
+      console.error(error)
+    }
+  },
+
   hideDivvyModal(){
     this.isModalVisible = false;
   }
