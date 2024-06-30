@@ -4,7 +4,7 @@
     <section class="flex justify-between items-center">
       <div class="join">
         <button @click="$store.dv_save.changeSortingOrder()" class="btn btn-sm btn-outline btn-accent join-item">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="w-5 h-5" viewBox="0 0 24 24">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M7 3v18m3-15L7 3L4 6m16 12l-3 3l-3-3m3 3V3"/>
           </svg>
@@ -16,7 +16,7 @@
                   :class="{'btn-disabled': !$store.dv_fb.isAuthenticated}"
                   class="btn btn-sm btn-outline btn-accent join-item">
             <svg x-show="!$store.dv_save.isSyncing" xmlns="http://www.w3.org/2000/svg"
-                 :class="{'text-warning': $store.dv_save.needsSync}" class="w-5 h-5" viewBox="0 0 24 24">
+                 :class="{'text-warning': $store.dv_save.needsSync}" width="20px" height="20px" class="w-5 h-5" viewBox="0 0 24 24">
               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M19 18a3.5 3.5 0 0 0 0-7h-1A5 4.5 0 0 0 7 9a4.6 4.4 0 0 0-2.1 8.4M12 13v9m-3-3l3 3l3-3"/>
             </svg>
@@ -28,7 +28,7 @@
         </div>
         <button @click="$store.dv_save.getSavedData()" :disabled="!$store.dv_fb.isAuthenticated" :class="{'btn-disabled': !$store.dv_fb.isAuthenticated}"
                 class="btn btn-sm btn-outline btn-accent join-item">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="w-5 h-5" viewBox="0 0 24 24">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4m-4 4a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/>
           </svg>
@@ -54,7 +54,7 @@
               </span>
               <span class="flex text-accent items-center gap-x-4">
                 <span x-show="doc.cloud" title="Saved on cloud">
-                   <svg xmlns="http://www.w3.org/2000/svg" title="test" class="w-5 h-5" viewBox="0 0 24 24">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" title="test" class="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="none"
                         stroke="currentColor"
                         stroke-linecap="round"
@@ -64,7 +64,7 @@
                    </svg>
                 </span>
                 <span x-show="doc.local" title="Saved on device">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="w-5 h-5" viewBox="0 0 24 24">
                     <path fill="none"
                           stroke="currentColor"
                           stroke-linecap="round"
